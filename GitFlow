@@ -1,0 +1,154 @@
+Introdução ao GitFlow
+
+- Claro! Vamos entender o **Git Flow** de forma simples e estruturada:
+
+---
+
+## 🚀 O que é **Git Flow**?
+
+**Git Flow** é uma estratégia de **ramificação (branching model)** para projetos Git, criada por Vincent Driessen, que ajuda a organizar o trabalho em equipe com clareza e controle.
+
+### 🎯 Objetivo:
+
+> Definir regras de como e quando criar branches, como nomear, e qual o fluxo para integrar novas features, corrigir bugs e lançar versões.
+
+---
+
+## 🧱 Estrutura básica do Git Flow
+
+### 1. **Branches principais:**
+
+* `main` (ou `master`):
+  Contém **código estável e pronto para produção**.
+
+* `develop`:
+  Contém código com as **últimas funcionalidades em desenvolvimento** (preparação para futura release).
+
+---
+
+### 2. **Branches auxiliares:**
+
+| Tipo de Branch | Origem    | Destino            | Finalidade                                          |
+| -------------- | --------- | ------------------ | --------------------------------------------------- |
+| `feature/*`    | `develop` | `develop`          | Desenvolvimento de novas funcionalidades            |
+| `release/*`    | `develop` | `main` e `develop` | Preparação para nova versão                         |
+| `hotfix/*`     | `main`    | `main` e `develop` | Correções urgentes direto na produção               |
+| `bugfix/*`     | `develop` | `develop`          | Correções de bugs que ainda não foram para produção |
+
+---
+
+## 🔁 Fluxo de trabalho passo a passo
+
+### ✅ 1. **Começo do projeto**
+
+```bash
+git init
+git checkout -b develop
+```
+
+---
+
+### ✅ 2. **Criar uma feature**
+
+```bash
+git checkout develop
+git checkout -b feature/nome-da-feature
+# ...trabalha no código...
+git commit -am "Adiciona nova feature"
+git checkout develop
+git merge feature/nome-da-feature
+git branch -d feature/nome-da-feature
+```
+
+---
+
+### ✅ 3. **Preparar uma release**
+
+```bash
+git checkout develop
+git checkout -b release/1.0.0
+# ...faz ajustes finais, documentação, versionamento...
+git commit -am "Preparação para versão 1.0.0"
+git checkout main
+git merge release/1.0.0
+git tag -a v1.0.0 -m "Release 1.0.0"
+git checkout develop
+git merge release/1.0.0
+git branch -d release/1.0.0
+```
+
+---
+
+### ✅ 4. **Corrigir um bug urgente (hotfix)**
+
+```bash
+git checkout main
+git checkout -b hotfix/1.0.1
+# ...corrige o bug...
+git commit -am "Corrige bug crítico"
+git checkout main
+git merge hotfix/1.0.1
+git tag -a v1.0.1 -m "Hotfix 1.0.1"
+git checkout develop
+git merge hotfix/1.0.1
+git branch -d hotfix/1.0.1
+```
+
+---
+
+## 🧰 Como aplicar no seu projeto
+
+### Opção 1: Manualmente (como nos exemplos acima)
+
+Ideal para times pequenos ou quando se quer controle completo.
+
+### Opção 2: Usando a ferramenta `git flow` (automatiza o processo)
+
+1. Instale:
+
+```bash
+# Debian/Ubuntu
+sudo apt install git-flow
+# macOS
+brew install git-flow
+```
+
+2. Inicialize:
+
+```bash
+git flow init
+# Ele vai perguntar os nomes dos branches (default: main e develop)
+```
+
+3. Usar comandos como:
+
+```bash
+git flow feature start minha-feature
+git flow feature finish minha-feature
+
+git flow release start 1.0.0
+git flow release finish 1.0.0
+
+git flow hotfix start urgente
+git flow hotfix finish urgente
+```
+
+---
+
+## 📌 Vantagens do Git Flow
+
+* Organização clara de versões e desenvolvimento
+* Evita push de código instável na `main`
+* Permite múltiplas features e correções paralelas
+* Ideal para projetos com **entregas em ciclos/versionamento**
+
+---
+
+## ⚠️ Desvantagens / Quando **não** usar
+
+* Pode ser **complexo demais para projetos pequenos ou times ágeis**
+* Fluxo **pesado** para ambientes com entrega contínua (CI/CD), onde `main` e `develop` não são necessários
+* Alternativas modernas: **GitHub Flow**, **GitLab Flow**, **Trunk Based Development**
+
+---
+
