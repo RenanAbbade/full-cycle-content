@@ -1,0 +1,139 @@
+Introdução completa ao Docker
+
+---
+
+## 🧭 **1. O que é Docker?**
+
+* Docker é uma **plataforma para criar, empacotar e executar aplicações em containers**.
+* Ele permite que você **rode o mesmo software em qualquer ambiente** (dev, homologação, produção), sem “deu certo na minha máquina”.
+* Usa **containers**, que são unidades leves e isoladas com tudo o que uma aplicação precisa (sistema, dependências, código...).
+
+---
+
+## 📦 **2. Imagem Docker**
+
+* Uma **imagem** é um **pacote imutável** com tudo que sua aplicação precisa.
+* É criada a partir de um **Dockerfile** (receita com comandos).
+* Pode ser comparada a um “ISO” de uma VM, mas mais leve e modular.
+* Serve de base para rodar containers.
+
+---
+
+## 🛠 **3. Dockerfile — Construindo a imagem**
+
+* O **Dockerfile** é o arquivo com os comandos para gerar a imagem.
+* Exemplo de comandos:
+
+  * `FROM`: imagem base
+  * `COPY`: copia arquivos para dentro da imagem
+  * `RUN`: executa comandos durante a construção
+  * `CMD` / `ENTRYPOINT`: define o que o container executará
+
+### 👉 Fluxo:
+
+```bash
+docker build -t minha-imagem .
+```
+
+---
+
+## 🧱 **4. Container**
+
+* É a **instância em execução** de uma imagem.
+* Compartilha o kernel do host, mas roda isolado.
+* Pode ser criado com:
+
+```bash
+docker run minha-imagem
+```
+
+* Containers são descartáveis e rápidos de iniciar/parar.
+
+---
+
+## 🤖 **5. Docker Client e Docker Daemon**
+
+* **Docker Client**: é o comando `docker` que você executa no terminal.
+
+  * Ele envia comandos como `build`, `run`, `push`...
+* **Docker Daemon (dockerd)**:
+
+  * É o serviço que **escuta esses comandos** e gerencia imagens, containers, volumes, redes, etc.
+  * Roda em background, geralmente no host.
+
+```bash
+# Exemplo: isso chama o daemon via client
+docker run hello-world
+```
+
+---
+
+## 🧠 **6. Docker Host**
+
+* É o **sistema operacional** (máquina física ou VM) onde o Docker está instalado e o Daemon está rodando.
+* Pode ser:
+
+  * Seu próprio computador (dev)
+  * Uma VM na nuvem (produção)
+  * Um servidor Linux com Docker
+
+---
+
+## ⚙️ **7. Docker Cache**
+
+* Docker usa **cache em camadas** ao construir imagens.
+* Cada instrução (`RUN`, `COPY`, etc.) gera uma **camada**.
+* Se nada mudou em uma camada, ela **é reutilizada**, o que acelera builds.
+
+### 💡 Dica:
+
+Mude arquivos menos frequentemente no topo do Dockerfile para manter o cache útil.
+
+---
+
+## 📤 **8. Docker Registry**
+
+* É o local onde as **imagens Docker são armazenadas e versionadas**.
+* O mais famoso: [Docker Hub](https://hub.docker.com/)
+* Outros exemplos:
+
+  * GitHub Container Registry
+  * Google Container Registry
+  * Amazon ECR
+
+### 🧭 Fluxo:
+
+* `docker pull nginx` → baixa imagem do registry
+* `docker push meu-usuario/minha-app` → envia imagem
+
+---
+
+## 🔁 **9. Fluxo completo do Docker**
+
+1. Você escreve um `Dockerfile`
+2. Usa `docker build` para gerar uma **imagem**
+3. Usa `docker run` para criar e iniciar um **container**
+4. A imagem pode ser enviada para um **registry**
+5. Qualquer outro ambiente pode fazer `docker pull` e rodar o container **sem configurar nada**
+
+---
+
+## 🧩 Resumo visual:
+
+```
+Você (Docker Client)
+       ↓
+Docker Daemon
+       ↓
+Constrói Imagem (com cache)
+       ↓
+Cria Container
+       ↓
+Executa no Docker Host
+       ↓
+Usa/push para Docker Registry
+```
+
+---
+
+
